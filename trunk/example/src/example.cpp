@@ -48,7 +48,62 @@ LOCAL_D CConsoleBase* console; // write all messages to this
 //  Local Functions
 LOCAL_C void MainL()
 	{
+	CJsonObject* root = new (ELeave) CJsonObject();
 	
+	CJsonObject* project = new (ELeave) CJsonObject();
+	// this will transfer ownership of project to root object
+	root->AddL(_L("project"), project);
+		project->AddL(_L("name"), _L("s60-json-library"));
+		project->AddRealL(_L("version"), 1.0);
+		
+	root->AddBoolL(_L("booleanVariable"), ETrue);
+	
+	CJsonArray* values = new (ELeave) CJsonArray();
+	// this will transfer ownership of values to root object
+	root->AddL(_L("arrayOfValues"), values);
+		values->AddBoolL(ETrue);
+		values->AddIntL(123);
+		values->AddL(_L("string"));
+		values->AddRealL(1.23);
+		
+	RBuf jsonString;
+	jsonString.Create(256);
+	
+	// convert in memory structure to json string format
+	root->ToStringL(jsonString);
+	
+	// this will release all objects
+	delete root;
+	
+	CJsonBuilder* jsonBuilder = CJsonBuilder::NewL();
+	
+	// this will create json string representation in memory
+	jsonBuilder->BuildFromJsonStringL(jsonString);
+	
+	CJsonObject* rootObject;
+	jsonBuilder->GetDocumentObject(rootObject);
+	
+	if(rootObject)
+		{
+		CJsonObject* project;
+		// this will not transfer ownership, owner of project is rootObject
+		rootObject->GetObjectL(_L("project"), project);
+		
+		if(project)
+			{
+			TBuf<256> name;
+			project->GetStringL(_L("name"), name);
+			}
+		}
+	
+	// we need manually release created object
+	delete rootObject;
+	
+	// releases only jsonBuilder object, not objects which was created by him
+	delete jsonBuilder;
+	
+	// release json string
+	jsonString.Close();
 	}
 
 LOCAL_C void DoStartL()
