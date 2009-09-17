@@ -28,13 +28,13 @@ TARGET		  example.exe
 TARGETTYPE	  exe
 UID			 0 0xE8659F6E
 
-USERINCLUDE	 ..\inc \s60-json-library\inc
+USERINCLUDE	 ..\inc \s60-json-library\source\inc
 SYSTEMINCLUDE   \epoc32\include
 
 SOURCEPATH	  ..\src
 SOURCE		  example.cpp
 
-SOURCEPATH	  ..\..\src
+SOURCEPATH	  ..\..\source\src
 SOURCE		  JsonArray.cpp  
 SOURCE		  JsonBuilder.cpp
 SOURCE		  JsonObject.cpp 
@@ -44,6 +44,7 @@ SOURCE		  JsonString.cpp
 SOURCE		  JsonTokener.cpp
 SOURCE		  JsonUtil.cpp   
 SOURCE		  JsonValue.cpp 
+SOURCE		  StringUtil.cpp
 
 LIBRARY		 euser.lib
 
