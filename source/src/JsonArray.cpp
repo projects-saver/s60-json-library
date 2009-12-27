@@ -171,7 +171,7 @@ void CJsonArray::ToStringL(RBuf& aOutputString) const
 				}
 				else
 				{
-				RBufAppendL(aOutputString, 'null,' );
+				RBufAppendL(aOutputString, _L("null,") );
 				}
 			}
 		
@@ -181,7 +181,7 @@ void CJsonArray::ToStringL(RBuf& aOutputString) const
 			}
 		else
 			{
-			RBufAppendL(aOutputString, 'null' );
+			RBufAppendL(aOutputString, _L("null") );
 			}
 		}		
 	RBufAppendL(aOutputString, ']' );
