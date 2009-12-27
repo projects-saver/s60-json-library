@@ -37,7 +37,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 /**
  *  CJsonString
- * 
  */
 class CJsonString : public CBase, public MJsonValue
 	{
@@ -58,14 +57,17 @@ public:
 	void SetStringL(const TDesC& aValue);
 	void SetIntL(TInt aValue);
 	void SetInt64L(TInt64 aValue);
-	void SetRealL(TReal32 aValue);
-	void SetBoolL(TBool aValue);
+	void SetBoolL(TBool aValue);	
+	void SetReal32L(TReal32 aValue);
+	void SetReal64L(TReal64 aValue);
 	
 	TPtrC String() const;
 	TReal32 RealL() const;
 	TBool BoolL() const;	
 	TInt IntL() const;
 	TInt64 Int64L() const;
+	TReal32 Real32L() const;
+	TReal64 Real64L() const;
 	
 	TJsonStringDataType DataType() const { return iDataType; }	
 	

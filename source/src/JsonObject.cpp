@@ -71,12 +71,19 @@ void CJsonObject::AddInt64L(const TDesC& aKey, TInt64 aValue)
 	iMembers.AppendL( pair );
 	}
 
-void CJsonObject::AddRealL(const TDesC& aKey, TReal32 aValue)
+void CJsonObject::AddReal32L(const TDesC& aKey, TReal32 aValue)
 	{
 	CJsonPair* pair = new (ELeave) CJsonPair(aKey, MJsonValue::EString);
-	((CJsonString*)pair->Value())->SetRealL(aValue);
+	((CJsonString*)pair->Value())->SetReal32L(aValue);
 	iMembers.AppendL( pair );
 	}
+
+void CJsonObject::AddReal64L(const TDesC& aKey, TReal64 aValue)
+ 	{
+ 	CJsonPair* pair = new (ELeave) CJsonPair(aKey, MJsonValue::EString);
+ 	((CJsonString*)pair->Value())->SetReal64L(aValue);
+ 	iMembers.AppendL( pair );
+ 	}
 
 void CJsonObject::AddBoolL(const TDesC& aKey, TBool aValue)
 	{
@@ -167,6 +174,24 @@ void CJsonObject::GetBoolL(const TDesC& aKey, TBool& aBool) const
 	else 
 		aBool = 0;		
 	}
+
+void CJsonObject::GetReal32L(const TDesC& aKey, TReal32& aReal) const
+ 	{
+ 	CJsonString* jsonString;  
+ 	if( jsonString = FindEntryAndCast<CJsonString>( aKey ) )
+ 		aReal = jsonString->Real32L();
+ 	else 
+ 		aReal = 0;   
+ 	}
+ 
+void CJsonObject::GetReal64L(const TDesC& aKey, TReal64& aReal) const
+ 	{
+ 	CJsonString* jsonString;  
+ 	if( jsonString = FindEntryAndCast<CJsonString>( aKey ) )
+ 		aReal = jsonString->Real64L();
+ 	else 
+ 		aReal = 0;
+ 	}
 
 void CJsonObject::ToStringL(RBuf& aOutputString) const
 	{

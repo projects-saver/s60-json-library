@@ -51,10 +51,17 @@ void CJsonArray::AddIntL(TInt aValue)
 	iElements.AppendL( string );
 	}
 
-void CJsonArray::AddRealL(TReal32 aValue)
+void CJsonArray::AddReal32L(TReal32 aValue)
 	{
 	CJsonString* string = new (ELeave) CJsonString;	
-	string->SetRealL(aValue);
+	string->SetReal32L(aValue);
+	iElements.AppendL( string );
+	}
+
+void CJsonArray::AddReal64L(TReal64 aValue)
+	{
+	CJsonString* string = new (ELeave) CJsonString;	
+	string->SetReal64L(aValue);
 	iElements.AppendL( string );
 	}
 
@@ -133,6 +140,22 @@ void CJsonArray::GetBoolL(TInt aIndex, TBool& aBool) const
 		aBool = string->BoolL();
 	}
 
+void CJsonArray::GetReal32L(TInt aIndex, TReal32& aReal) const
+ 	{
+ 	ASSERT( aIndex >= 0 );
+ 	CJsonString* string;
+ 	if( string = dynamic_cast<CJsonString*>( iElements[aIndex] ) )
+ 		aReal = string->Real32L();
+ 	}
+ 
+ void CJsonArray::GetReal64L(TInt aIndex, TReal64& aReal) const
+ 	{
+ 	ASSERT( aIndex >= 0 );
+ 	CJsonString* string;
+	if( string = dynamic_cast<CJsonString*>( iElements[aIndex] ) )
+ 		aReal = string->Real64L();
+ 	}
+
 // [element1,element2,...,elementn]
 void CJsonArray::ToStringL(RBuf& aOutputString) const
 	{
@@ -141,14 +164,25 @@ void CJsonArray::ToStringL(RBuf& aOutputString) const
 		{
 		for(int i = 0; i < iElements.Count() - 1; ++i)
 			{
-			if(!iElements[i])
-				continue;			
-			iElements[i]->ToStringL( aOutputString );
-			RBufAppendL(aOutputString, ',' );
+			if(iElements[i])
+				{			
+				iElements[i]->ToStringL( aOutputString );
+				RBufAppendL(aOutputString, ',' );
+				}
+				else
+				{
+				RBufAppendL(aOutputString, 'null,' );
+				}
 			}
 		
 		if(iElements[iElements.Count() - 1])
+			{
 			iElements[iElements.Count() - 1]->ToStringL( aOutputString );
+			}
+		else
+			{
+			RBufAppendL(aOutputString, 'null' );
+			}
 		}		
 	RBufAppendL(aOutputString, ']' );
 	}

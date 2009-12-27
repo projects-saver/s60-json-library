@@ -74,7 +74,7 @@ public:
 		return iStack[ iStack.Count() - 1 ];
 		}
 	
-	TInt Count()
+	TInt Count() const
 		{
 		return iStack.Count();
 		}

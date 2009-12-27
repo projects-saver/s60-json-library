@@ -48,7 +48,8 @@ public:
 
 	void AddIntL(const TDesC& aKey, TInt aValue);
 	void AddInt64L(const TDesC& aKey, TInt64 aValue);
-	void AddRealL(const TDesC& aKey, TReal32 aValue);
+	void AddReal32L(const TDesC& aKey, TReal32 aValue);
+	void AddReal64L(const TDesC& aKey, TReal64 aValue);
 	void AddBoolL(const TDesC& aKey, TBool aValue);
 		
 	void AddL(const TDesC& aKey, const TDesC& aValue);
@@ -65,6 +66,8 @@ public:
 	void GetIntL(const TDesC& aKey, TInt& aInt) const;
 	void GetInt64L(const TDesC& aKey, TInt64& aInt) const;
 	void GetBoolL(const TDesC& aKey, TBool& aBool) const;
+	void GetReal32L(const TDesC& aKey, TReal32& aReal) const;
+	void GetReal64L(const TDesC& aKey, TReal64& aReal) const;
 	
 	inline TInt Count() const { return iMembers.Count(); }	
 	

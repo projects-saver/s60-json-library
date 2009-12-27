@@ -87,7 +87,7 @@ private:
 		if( !iObjectStack.Count() )
 			return;
 		MJsonValue* value = iObjectStack.TopL();
-		
+	
 		switch( value->Type() )
 			{
 			case MJsonValue::EArray:

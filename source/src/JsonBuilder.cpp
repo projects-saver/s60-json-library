@@ -37,6 +37,9 @@ iDocumentObject( NULL )
 
 CJsonBuilder::~CJsonBuilder()
 	{
+	if(iJsonParser)
+		delete iJsonParser;
+	
 	iObjectStack.Close();
 	iLastKey.Close();
 	}
