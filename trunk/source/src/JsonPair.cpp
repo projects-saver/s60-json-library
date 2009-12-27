@@ -32,6 +32,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "JsonArray.h"
 #include "StringUtil.h"
 
+_LIT(KNullValue, "null");
+
 CJsonPair::CJsonPair(const TDesC& aKey, MJsonValue::TJsonValueType aType)
 	: iKey(aKey)
 	{
@@ -74,4 +76,6 @@ void CJsonPair::ToStringL(RBuf& aOutputString) const
 	RBufAppendL(aOutputString, ':' );
 	if( iValue )
 		iValue->ToStringL( aOutputString );
+	else
+		RBufAppendL(aOutputString, KNullValue );
 	}

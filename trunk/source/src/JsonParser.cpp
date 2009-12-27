@@ -28,11 +28,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "JsonParser.h"
 #include "JsonUtil.h"
 
-_LIT(KStartTokens, "{[}]");
-_LIT(KEndTokens, "}]");
-_LIT(KPairToken, ":");
-_LIT(KComa, ",");
-
 CJsonParser::CJsonParser(MJsonContentHandler& aContentHandler)
 	: iContentHandler(aContentHandler), iString(0, 0)
 	{

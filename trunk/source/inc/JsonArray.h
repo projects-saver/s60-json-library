@@ -47,10 +47,14 @@ public:
 	virtual ~CJsonArray();
 	
 	void AddIntL(TInt aValue);
-	void AddRealL(TReal32 aValue);
+	
+	void AddReal32L(TReal32 aValue);
+	void AddReal64L(TReal64 aValue);
+	
 	void AddBoolL(TBool aValue);
 	
 	void AddL(const TDesC& aValue);
+	
 	// transfer ownership of aValue to this
 	void AddL(CJsonObject* aValue);
 	void AddL(CJsonArray* aValue);
@@ -62,6 +66,9 @@ public:
 	void GetStringL(TInt aIndex, TDes& aString) const;
 	void GetIntL(TInt aIndex, TInt& aInt) const;
 	void GetBoolL(TInt aIndex, TBool& aBool) const;
+	
+	void GetReal32L(TInt aIndex, TReal32& aReal) const;
+	void GetReal64L(TInt aIndex, TReal64& aReal) const;
 	
 	TInt GetStringLength(TInt aIndex) const;
 	

@@ -44,63 +44,96 @@ _LIT(KTextPressAnyKey, " [press any key]\n");
 
 LOCAL_D CConsoleBase* console; // write all messages to this
 
+_LIT(KTestFormatedJson, "{\t\"message\":\"test1\r\ntest2\r\n\t\t\ttest3\"}");
+
 
 //  Local Functions
 LOCAL_C void MainL()
 	{
-	CJsonObject* root = new (ELeave) CJsonObject();
-	
-	CJsonObject* project = new (ELeave) CJsonObject();
-	// this will transfer ownership of project to root object
-	root->AddL(_L("project"), project);
-		project->AddL(_L("name"), _L("s60-json-library"));
-		project->AddRealL(_L("version"), 1.0);
-		
-	root->AddBoolL(_L("booleanVariable"), ETrue);
-	
-	CJsonArray* values = new (ELeave) CJsonArray();
-	// this will transfer ownership of values to root object
-	root->AddL(_L("arrayOfValues"), values);
-		values->AddBoolL(ETrue);
-		values->AddIntL(123);
-		values->AddL(_L("string"));
-		values->AddRealL(1.23);
-		
+	// to json
 	RBuf jsonString;
-	jsonString.Create(256);
-	
-	// convert in memory structure to json string format
-	root->ToStringL(jsonString);
-	
-	// this will release all objects
-	delete root;
-	
-	CJsonBuilder* jsonBuilder = CJsonBuilder::NewL();
-	
-	// this will create json string representation in memory
-	jsonBuilder->BuildFromJsonStringL(jsonString);
-	
-	CJsonObject* rootObject;
-	jsonBuilder->GetDocumentObject(rootObject);
-	
-	if(rootObject)
 		{
-		CJsonObject* project;
-		// this will not transfer ownership, owner of project is rootObject
-		rootObject->GetObjectL(_L("project"), project);
+		CJsonObject* root = new (ELeave) CJsonObject();
 		
-		if(project)
-			{
-			TBuf<256> name;
-			project->GetStringL(_L("name"), name);
-			}
+		CJsonObject* project = new (ELeave) CJsonObject();
+		// this will transfer ownership of project to root object
+		root->AddL(_L("project"), project);
+			project->AddL(_L("name"), _L("s60-json-library"));
+			root->AddBoolL(_L("booleanVariable"), ETrue);
+			root->AddL(_L("nullValue"), (CJsonObject*)NULL);
+			
+		root->AddBoolL(_L("booleanVariable"), ETrue);
+		
+		CJsonArray* values = new (ELeave) CJsonArray();
+		// this will transfer ownership of values to root object
+		root->AddL(_L("arrayOfValues"), values);
+			values->AddBoolL(ETrue);
+			values->AddIntL(123);
+			values->AddL(_L("string"));
+			values->AddReal32L(1.23);
+			values->AddL((CJsonObject*)NULL);
+			
+		jsonString.Create(256);
+		
+		// convert in memory structure to json string format
+		root->ToStringL(jsonString);
+		
+		// this will release all objects
+		delete root;
 		}
 	
-	// we need manually release created object
-	delete rootObject;
-	
-	// releases only jsonBuilder object, not objects which was created by him
-	delete jsonBuilder;
+	// from json
+		{
+		CJsonBuilder* jsonBuilder = CJsonBuilder::NewL();
+		
+		// this will create json string representation in memory
+		jsonBuilder->BuildFromJsonStringL(jsonString);
+		
+		CJsonObject* rootObject;
+		jsonBuilder->GetDocumentObject(rootObject);
+		
+		if(rootObject)
+			{
+			CJsonObject* project;
+			// this will not transfer ownership, owner of project is rootObject
+			rootObject->GetObjectL(_L("project"), project);
+			
+			if(project)
+				{
+				TBuf<256> name;
+				project->GetStringL(_L("name"), name);
+				}
+			}
+		
+		// we need manually release created object
+		delete rootObject;
+		
+		// releases only jsonBuilder object, not objects which was created by him
+		delete jsonBuilder;
+		}
+		
+	// from formatted json
+		{
+		CJsonBuilder* jsonBuilder = CJsonBuilder::NewL();
+		
+		// this will create json string representation in memory
+		jsonBuilder->BuildFromJsonStringL(KTestFormatedJson);
+		
+		CJsonObject* rootObject;
+		jsonBuilder->GetDocumentObject(rootObject);
+		
+		if(rootObject)
+			{
+			TBuf<256> message;
+			rootObject->GetStringL(_L("message"), message);
+			}
+		
+		// we need manually release created object
+		delete rootObject;
+		
+		// releases only jsonBuilder object, not objects which was created by him
+		delete jsonBuilder;
+		}
 	
 	// release json string
 	jsonString.Close();

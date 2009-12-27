@@ -38,10 +38,11 @@ void ConvertUnicodeToJsonFormatL(const TDesC& aString, RBuf& aOutput)
 			case '\\':
 				RBufAppendL(aOutput, _L("\\\\") );
 				break;
+				
+			case '/':
+				RBufAppendL(aOutput, _L("\\/") );
+				break;
 						
-			case '\'':
-				RBufAppendL(aOutput, _L("\\'") );
-				break;	
 			case '"':
 				RBufAppendL(aOutput, _L("\\\"") );
 				break;
@@ -117,10 +118,11 @@ void ConvertJsonFormatToUnicodeL(const TDesC& aString, RBuf& aOutput)
 						++i;
 						break;	
 						
-					case '\'':
-						RBufAppendL(aOutput, '\'' );
+					case '/':
+						RBufAppendL(aOutput, '/' );
 						++i;
-						break;
+						break;	
+						
 					case '"':
 						RBufAppendL(aOutput, '"' );
 						++i;
@@ -153,6 +155,14 @@ void ConvertJsonFormatToUnicodeL(const TDesC& aString, RBuf& aOutput)
 						break;
 					}	
 				}
+				break;
+				
+			// its only text formating so dont append it to final string
+			case '\n':
+			case '\r':
+			case '\f':
+			case '\t':
+			case '\b':
 				break;
 				
 			default:

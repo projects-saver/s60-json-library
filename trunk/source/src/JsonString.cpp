@@ -63,10 +63,22 @@ void CJsonString::SetInt64L(TInt64 aValue)
 	iData.Format( _L("%Ld"), aValue);
 	}
 
-void CJsonString::SetRealL(TReal32 aValue)
+void CJsonString::SetReal32L(TReal32 aValue)
 	{
 	iDataType = EReal;
-	iData.Format( _L("%f"), aValue);
+	TRealFormat format;
+	format.iType = KRealFormatFixed | KDoNotUseTriads;//not sure these are necessary
+	format.iPoint = '.';//this is required so that when the user is working in a different local (e.g. French) he won't get ',' instead of '.'
+	iData.Num(aValue, format);
+	}
+
+void CJsonString::SetReal64L(TReal64 aValue)
+	{
+	iDataType = EReal;
+	TRealFormat format;
+	format.iType = KRealFormatFixed | KDoNotUseTriads;//not sure these are necessary
+	format.iPoint = '.';//this is required so that when the user is working in a different local (e.g. French) he won't get ',' instead of '.'
+	iData.Num(aValue, format);
 	}
 
 void CJsonString::SetBoolL(TBool aValue)
@@ -83,13 +95,24 @@ TPtrC CJsonString::String() const
 	return iData;
 	}
 
-TReal32 CJsonString::RealL() const
+TReal32 CJsonString::Real32L() const
 	{
 	TLex lex( iData );
 	TInt error;
 	TReal32 real;
 	
-	if( (error = lex.Val( real )) != KErrNone )
+	if( (error = lex.Val( real, '.' )) != KErrNone )//the '.' is required so that when the user is working in a different local (e.g. French) he won't get ',' instead of '.'
+		User::Leave( error );
+	return real;
+	}
+
+TReal64 CJsonString::Real64L() const
+	{
+	TLex lex( iData );
+	TInt error;
+	TReal64 real;
+  
+	if( (error = lex.Val( real, '.' )) != KErrNone )//the '.' is required so that when the user is working in a different local (e.g. French) he won't get ',' instead of '.'
 		User::Leave( error );
 	return real;
 	}
