@@ -69,20 +69,41 @@ void CJsonParser::ParseL(const TDesC& aString)
 	{	
 	iTokener->SetJsonString( aString );
 	
-	TText c;
+	TText previous = 0;
+	TText next = 0;
 	for(;;)
 		{
-		c = iTokener->NextClean();
-		switch( c )
+		// If key string without quotes
+		if ((previous == ',' || previous == '{') && iTokener->Current() != '\"' && iTokener->Current() != ' ')
+			{
+			TPtrC string = iTokener->NextTo( ':' );
+			iLastString.Zero();
+			ConvertJsonFormatToUnicodeL(string, iLastString);
+																
+			if( iParserStateStack.TopL() != EParseArray && iParserStateStack.TopL() != EParseValue)
+				{
+				iContentHandler.OnKey( iLastString );
+				}
+			else
+				{
+				if( iParserStateStack.TopL() == EParseValue )
+					iParserStateStack.Pop();
+				iContentHandler.OnValue( iLastString );
+				}
+			}
+	
+		// Then
+		next = iTokener->NextClean();
+		switch( next )
 			{
 			case 0:
 				return;
-			
+				
 			case '{':				
 				iParserStateStack.PushL( EParseObject );
 				iContentHandler.OnBeginObject();
 				break;
-				
+					
 			case '}':
 				if( iParserStateStack.TopL() == EParseValue )
 					iParserStateStack.Pop();
@@ -94,12 +115,12 @@ void CJsonParser::ParseL(const TDesC& aString)
 				iParserStateStack.Pop();
 				iContentHandler.OnEndObject();
 				break;
-				
+					
 			case '[':				
 				iParserStateStack.PushL( EParseArray );
 				iContentHandler.OnBeginArray();
 				break;
-				
+					
 			case ']':
 				if( iParserStateStack.TopL() == EParseValue )
 					iParserStateStack.Pop();
@@ -111,22 +132,22 @@ void CJsonParser::ParseL(const TDesC& aString)
 				iParserStateStack.Pop();
 				iContentHandler.OnEndArray();
 				break;
-				
+					
 			case ':':
 				iParserStateStack.PushL( EParseValue );
 				break;
-				
+					
 			case ',':
 				if( iParserStateStack.TopL() == EParseValue )
 					iParserStateStack.Pop();
 				break;
-				
+					
 			case '\"':
 				{
 				TPtrC string = iTokener->NextString( '\"' );
 				iLastString.Zero();
 				ConvertJsonFormatToUnicodeL(string, iLastString);
-				
+					
 				if( iParserStateStack.TopL() != EParseArray 
 						&& iParserStateStack.TopL() != EParseValue)
 					{
@@ -140,20 +161,24 @@ void CJsonParser::ParseL(const TDesC& aString)
 					}
 				}
 				break;			
-
+	
 			default:
 				{
 				iTokener->Back();
 				TPtrC string = iTokener->NextTo( _L(",}]") );
 				iLastString.Zero();
 				ConvertJsonFormatToUnicodeL(string, iLastString);
-				
+										
 				iContentHandler.OnValue( iLastString );
 				if( iParserStateStack.TopL() == EParseValue )
 					iParserStateStack.Pop();
 				}
 				break;
 			}
+		
+		// Store processed symbol but skip whitespaces
+		if (next != ' ')
+			previous = next;
 		}
 	}
 

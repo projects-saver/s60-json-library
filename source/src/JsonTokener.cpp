@@ -54,6 +54,15 @@ TBool CJsonTokener::More() const
 	{
 	return (iPosition < iJsonString.Length());
 	}
+	
+TText CJsonTokener::Current()
+	{
+	if( More() )
+		{
+		return iJsonString[ iPosition ]; 
+		}
+	return 0;
+	}
 
 TText CJsonTokener::Next()
 	{

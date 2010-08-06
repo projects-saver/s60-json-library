@@ -73,6 +73,13 @@ public:
 	TBool More() const;
 	
 	/**
+	 * Get the current character in the source string.
+	 *
+	 * @return The current character, or 0 if past the end of the source string.
+	 */
+	TText Current();
+	
+	/**
 	 * Get the next character in the source string.
 	 *
 	 * @return The next character, or 0 if past the end of the source string.
